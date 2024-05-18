@@ -1,17 +1,17 @@
 package com.dicoding.picodiploma.loginwithanimation.view.main
 
-import android.animation.AnimatorSet
-import android.animation.ObjectAnimator
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
-import android.view.View
-import android.view.WindowInsets
-import android.view.WindowManager
+import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import com.dicoding.picodiploma.loginwithanimation.R
+import com.dicoding.picodiploma.loginwithanimation.data.Result
 import com.dicoding.picodiploma.loginwithanimation.databinding.ActivityMainBinding
 import com.dicoding.picodiploma.loginwithanimation.view.ViewModelFactory
+import com.dicoding.picodiploma.loginwithanimation.view.adapter.StoryAdapter
 import com.dicoding.picodiploma.loginwithanimation.view.welcome.WelcomeActivity
 
 class MainActivity : AppCompatActivity() {
@@ -24,52 +24,49 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        setSupportActionBar(binding.toolbarMain)
 
         viewModel.getSession().observe(this) { user ->
+            Log.d("MainActivity", "User: ${user.isLogin}")
             if (!user.isLogin) {
                 startActivity(Intent(this, WelcomeActivity::class.java))
                 finish()
             }
         }
 
-        setupView()
-        setupAction()
-        playAnimation()
+        val adapter = StoryAdapter()
+        binding.rvMainStories.adapter = adapter;
+
+        fetchStories(adapter)
     }
 
-    private fun setupView() {
-        @Suppress("DEPRECATION")
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            window.insetsController?.hide(WindowInsets.Type.statusBars())
-        } else {
-            window.setFlags(
-                WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN
-            )
-        }
-        supportActionBar?.hide()
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.main_menu, menu)
+        return true
     }
 
-    private fun setupAction() {
-        binding.logoutButton.setOnClickListener {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
+        R.id.action_main_logout -> {
             viewModel.logout()
+            Log.d("MainActivity", "Logout called.")
+            true
         }
+        else -> super.onOptionsItemSelected(item)
     }
 
-    private fun playAnimation() {
-        ObjectAnimator.ofFloat(binding.imageView, View.TRANSLATION_X, -30f, 30f).apply {
-            duration = 6000
-            repeatCount = ObjectAnimator.INFINITE
-            repeatMode = ObjectAnimator.REVERSE
-        }.start()
-
-        val name = ObjectAnimator.ofFloat(binding.nameTextView, View.ALPHA, 1f).setDuration(100)
-        val message = ObjectAnimator.ofFloat(binding.messageTextView, View.ALPHA, 1f).setDuration(100)
-        val logout = ObjectAnimator.ofFloat(binding.logoutButton, View.ALPHA, 1f).setDuration(100)
-
-        AnimatorSet().apply {
-            playSequentially(name, message, logout)
-            startDelay = 100
-        }.start()
+    private fun fetchStories(storyAdapter: StoryAdapter) {
+        viewModel.getStories().observe(this) {
+            when(it) {
+                is Result.Error -> {
+                    Log.e("MainActivity", "Error: ${it.error}")
+                }
+                Result.Loading -> {
+                    Log.d("MainActivity", "Loading...")
+                }
+                is Result.Success -> {
+                    storyAdapter.submitList(it.data.listStory)
+                }
+            }
+        }
     }
 }

@@ -18,7 +18,7 @@ class PasswordEditText
             count: Int,
         ) {
             if (s.toString().length < 8) {
-                setError(R.string.password_length_error.toString(), null)
+                setError(resources.getString(R.string.password_length_error), null)
             } else {
                 error = null
             }

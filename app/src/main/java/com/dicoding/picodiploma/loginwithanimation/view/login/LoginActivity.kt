@@ -5,12 +5,14 @@ import android.animation.ObjectAnimator
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.dicoding.picodiploma.loginwithanimation.data.Result
 import com.dicoding.picodiploma.loginwithanimation.data.pref.UserModel
 import com.dicoding.picodiploma.loginwithanimation.databinding.ActivityLoginBinding
 import com.dicoding.picodiploma.loginwithanimation.view.ViewModelFactory
@@ -47,20 +49,38 @@ class LoginActivity : AppCompatActivity() {
 
     private fun setupAction() {
         binding.loginButton.setOnClickListener {
-            val email = binding.emailEditText.text.toString()
-            viewModel.saveSession(UserModel(email, "sample_token"))
-            AlertDialog.Builder(this).apply {
-                setTitle("Yeah!")
-                setMessage("Anda berhasil login. Ayo sharing story anda!")
-                setPositiveButton("Lanjut") { _, _ ->
-                    val intent = Intent(context, MainActivity::class.java)
-                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-                    startActivity(intent)
-                    finish()
+            val email = binding.edLoginEmail.text.toString()
+            val password = binding.edLoginPassword.text.toString()
+
+            viewModel.login(email, password).observe(this) {
+                when(it) {
+                    is Result.Error -> {
+                        Log.e("LoginActivity", "Error: ${it.error}")
+                    }
+                    Result.Loading -> {
+                        Log.d("LoginActivity", "Loading...")
+                    }
+                    is Result.Success -> {
+                        handleSuccessLogin(email, it.data.loginResult?.token ?: "")
+                    }
                 }
-                create()
-                show()
             }
+
+        }
+    }
+
+    private fun handleSuccessLogin(email: String, token: String) {
+        viewModel.saveSession(UserModel(email, token))
+        AlertDialog.Builder(this).apply {
+            setMessage("Anda berhasil login. Ayo sharing story anda!")
+            setPositiveButton("Lanjut") { _, _ ->
+                val intent = Intent(context, MainActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                startActivity(intent)
+                finish()
+            }
+            create()
+            show()
         }
     }
 

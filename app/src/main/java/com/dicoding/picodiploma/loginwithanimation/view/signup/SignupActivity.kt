@@ -4,14 +4,23 @@ import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
+import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.dicoding.picodiploma.loginwithanimation.data.Result
 import com.dicoding.picodiploma.loginwithanimation.databinding.ActivitySignupBinding
+import com.dicoding.picodiploma.loginwithanimation.view.ViewModelFactory
+import com.dicoding.picodiploma.loginwithanimation.view.login.LoginViewModel
 
 class SignupActivity : AppCompatActivity() {
+    private val viewModel by viewModels<SignupViewModel> {
+        ViewModelFactory.getInstance(this)
+    }
+
     private lateinit var binding: ActivitySignupBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,17 +48,37 @@ class SignupActivity : AppCompatActivity() {
 
     private fun setupAction() {
         binding.signupButton.setOnClickListener {
-            val email = binding.emailEditText.text.toString()
+            val name = binding.edRegisterName.text.toString()
+            val email = binding.edRegisterEmail.text.toString()
+            val password = binding.edRegisterPassword.text.toString()
 
-            AlertDialog.Builder(this).apply {
-                setTitle("Yeah!")
-                setMessage("Akun dengan $email sudah jadi nih. Yuk, login dan belajar coding.")
-                setPositiveButton("Lanjut") { _, _ ->
-                    finish()
+            viewModel.register(name, email, password).observe(this) {
+                when (it) {
+                    is Result.Error -> {
+                        Log.e("SignupActivity", "Error: ${it.error}")
+                    }
+
+                    Result.Loading -> {
+                        Log.d("SignupActivity", "Loading...")
+                    }
+
+                    is Result.Success -> {
+                        handleSuccessRegister(email)
+                    }
                 }
-                create()
-                show()
             }
+        }
+    }
+
+    private fun handleSuccessRegister(email: String) {
+        AlertDialog.Builder(this).apply {
+            setTitle("Yeah!")
+            setMessage("Akun dengan $email sudah jadi nih. Yuk, login dan belajar coding.")
+            setPositiveButton("Lanjut") { _, _ ->
+                finish()
+            }
+            create()
+            show()
         }
     }
 

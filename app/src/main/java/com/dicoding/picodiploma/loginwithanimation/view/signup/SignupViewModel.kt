@@ -1,4 +1,4 @@
-package com.dicoding.picodiploma.loginwithanimation.view.login
+package com.dicoding.picodiploma.loginwithanimation.view.signup
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -7,17 +7,11 @@ import com.dicoding.picodiploma.loginwithanimation.data.repository.StoriesReposi
 import com.dicoding.picodiploma.loginwithanimation.data.repository.UserRepository
 import kotlinx.coroutines.launch
 
-class LoginViewModel(
-    private val repository: UserRepository,
+class SignupViewModel(
     private val storiesRepository: StoriesRepository
 ) :
     ViewModel() {
-    fun saveSession(user: UserModel) {
-        viewModelScope.launch {
-            repository.saveSession(user)
-        }
-    }
-
-    fun login(email: String, password: String) = storiesRepository.login(email, password)
+    fun register(name: String, email: String, password: String) =
+        storiesRepository.register(name, email, password)
 
 }

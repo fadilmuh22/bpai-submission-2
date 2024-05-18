@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
 import com.dicoding.picodiploma.loginwithanimation.data.Result
 import com.dicoding.picodiploma.loginwithanimation.data.remote.response.ErrorResponse
+import com.dicoding.picodiploma.loginwithanimation.data.remote.response.LoginResponse
 import com.dicoding.picodiploma.loginwithanimation.data.remote.response.RegisterResponse
 import com.dicoding.picodiploma.loginwithanimation.data.remote.response.StoriesResponse
 import com.dicoding.picodiploma.loginwithanimation.data.remote.retrofit.ApiService
@@ -38,7 +39,7 @@ class StoriesRepository private constructor(
     fun login(
         email: String,
         password: String,
-    ): LiveData<Result<RegisterResponse>> =
+    ): LiveData<Result<LoginResponse>> =
         liveData {
             emit(Result.Loading)
             try {

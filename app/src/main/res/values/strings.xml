@@ -2,6 +2,7 @@
     <string name="app_name">DicodingStory</string>
     <string name="signup">Daftar</string>
     <string name="login">Masuk</string>
+    <string name="title_main">Dicoding Story</string>
     <string name="message_welcome_page">Mau berbagi ilmu tentang Android, iOS, Machine Learning, Cloud, Front-End, Back-End, dan bidang IT lainnya? Di Dicoding Story aja!</string>
     <string name="title_welcome_page">Selamat datang di Dicoding Story!</string>
     <string name="title_signup_page">Lengkapi data dirimu di bawah ini ya</string>
