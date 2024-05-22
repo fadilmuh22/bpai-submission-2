@@ -4,17 +4,16 @@ import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import com.dicoding.picodiploma.loginwithanimation.data.Result
+import com.dicoding.picodiploma.loginwithanimation.data.ResultState
 import com.dicoding.picodiploma.loginwithanimation.databinding.ActivitySignupBinding
 import com.dicoding.picodiploma.loginwithanimation.view.ViewModelFactory
-import com.dicoding.picodiploma.loginwithanimation.view.login.LoginViewModel
 
 class SignupActivity : AppCompatActivity() {
     private val viewModel by viewModels<SignupViewModel> {
@@ -40,29 +39,34 @@ class SignupActivity : AppCompatActivity() {
         } else {
             window.setFlags(
                 WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN
+                WindowManager.LayoutParams.FLAG_FULLSCREEN,
             )
         }
         supportActionBar?.hide()
     }
 
     private fun setupAction() {
-        binding.signupButton.setOnClickListener {
+        binding.signupButton.setOnClickListener { registerButton ->
             val name = binding.edRegisterName.text.toString()
             val email = binding.edRegisterEmail.text.toString()
             val password = binding.edRegisterPassword.text.toString()
 
             viewModel.register(name, email, password).observe(this) {
                 when (it) {
-                    is Result.Error -> {
-                        Log.e("SignupActivity", "Error: ${it.error}")
+                    is ResultState.Error -> {
+                        binding.cpiSignup.visibility = View.GONE
+                        registerButton.isEnabled = true
+                        Toast.makeText(this, it.error, Toast.LENGTH_SHORT).show()
                     }
 
-                    Result.Loading -> {
-                        Log.d("SignupActivity", "Loading...")
+                    ResultState.Loading -> {
+                        binding.cpiSignup.visibility = View.VISIBLE
+                        registerButton.isEnabled = false
                     }
 
-                    is Result.Success -> {
+                    is ResultState.Success -> {
+                        binding.cpiSignup.visibility = View.GONE
+                        registerButton.isEnabled = true
                         handleSuccessRegister(email)
                     }
                 }
@@ -104,7 +108,6 @@ class SignupActivity : AppCompatActivity() {
             ObjectAnimator.ofFloat(binding.passwordEditTextLayout, View.ALPHA, 1f).setDuration(100)
         val signup = ObjectAnimator.ofFloat(binding.signupButton, View.ALPHA, 1f).setDuration(100)
 
-
         AnimatorSet().apply {
             playSequentially(
                 title,
@@ -114,7 +117,7 @@ class SignupActivity : AppCompatActivity() {
                 emailEditTextLayout,
                 passwordTextView,
                 passwordEditTextLayout,
-                signup
+                signup,
             )
             startDelay = 100
         }.start()

@@ -5,14 +5,14 @@ import android.animation.ObjectAnimator
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import com.dicoding.picodiploma.loginwithanimation.data.Result
+import com.dicoding.picodiploma.loginwithanimation.data.ResultState
 import com.dicoding.picodiploma.loginwithanimation.data.pref.UserModel
 import com.dicoding.picodiploma.loginwithanimation.databinding.ActivityLoginBinding
 import com.dicoding.picodiploma.loginwithanimation.view.ViewModelFactory
@@ -48,28 +48,35 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun setupAction() {
-        binding.loginButton.setOnClickListener {
+        binding.loginButton.setOnClickListener { loginButton ->
             val email = binding.edLoginEmail.text.toString()
             val password = binding.edLoginPassword.text.toString()
 
             viewModel.login(email, password).observe(this) {
-                when(it) {
-                    is Result.Error -> {
-                        Log.e("LoginActivity", "Error: ${it.error}")
+                when (it) {
+                    is ResultState.Error -> {
+                        binding.cpiLogin.visibility = View.GONE
+                        loginButton.isEnabled = true
+                        Toast.makeText(this, it.error, Toast.LENGTH_SHORT).show()
                     }
-                    Result.Loading -> {
-                        Log.d("LoginActivity", "Loading...")
+                    ResultState.Loading -> {
+                        binding.cpiLogin.visibility = View.VISIBLE
+                        loginButton.isEnabled = false
                     }
-                    is Result.Success -> {
+                    is ResultState.Success -> {
+                        binding.cpiLogin.visibility = View.GONE
+                        loginButton.isEnabled = true
                         handleSuccessLogin(email, it.data.loginResult?.token ?: "")
                     }
                 }
             }
-
         }
     }
 
-    private fun handleSuccessLogin(email: String, token: String) {
+    private fun handleSuccessLogin(
+        email: String,
+        token: String,
+    ) {
         viewModel.saveSession(UserModel(email, token))
         AlertDialog.Builder(this).apply {
             setMessage("Anda berhasil login. Ayo sharing story anda!")

@@ -6,13 +6,14 @@ import androidx.lifecycle.ViewModelProvider
 import com.dicoding.picodiploma.loginwithanimation.data.repository.StoriesRepository
 import com.dicoding.picodiploma.loginwithanimation.data.repository.UserRepository
 import com.dicoding.picodiploma.loginwithanimation.di.Injection
+import com.dicoding.picodiploma.loginwithanimation.view.addstory.AddStoryViewModel
 import com.dicoding.picodiploma.loginwithanimation.view.login.LoginViewModel
 import com.dicoding.picodiploma.loginwithanimation.view.main.MainViewModel
 import com.dicoding.picodiploma.loginwithanimation.view.signup.SignupViewModel
 
 class ViewModelFactory(
     private val userRepository: UserRepository,
-    private val storiesRepository: StoriesRepository
+    private val storiesRepository: StoriesRepository,
 ) :
     ViewModelProvider.NewInstanceFactory() {
     @Suppress("UNCHECKED_CAST")
@@ -30,6 +31,10 @@ class ViewModelFactory(
                 SignupViewModel(storiesRepository) as T
             }
 
+            modelClass.isAssignableFrom(AddStoryViewModel::class.java) -> {
+                AddStoryViewModel(storiesRepository) as T
+            }
+
             else -> throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
         }
     }
@@ -42,10 +47,11 @@ class ViewModelFactory(
         fun getInstance(context: Context): ViewModelFactory {
             if (instance == null) {
                 synchronized(ViewModelFactory::class.java) {
-                    instance = ViewModelFactory(
-                        Injection.provideRepository(context),
-                        Injection.provideStoriesRepository(context)
-                    )
+                    instance =
+                        ViewModelFactory(
+                            Injection.provideRepository(context),
+                            Injection.provideStoriesRepository(context),
+                        )
                 }
             }
             return instance as ViewModelFactory

@@ -1,23 +1,45 @@
 package com.dicoding.picodiploma.loginwithanimation.view.adapter
 
+import android.app.Activity
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.app.ActivityOptionsCompat
+import androidx.core.util.Pair
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.dicoding.picodiploma.loginwithanimation.data.remote.response.ListStoryItem
 import com.dicoding.picodiploma.loginwithanimation.databinding.ItemStoryBinding
-import com.dicoding.picodiploma.loginwithanimation.view.login.LoginActivity
+import com.dicoding.picodiploma.loginwithanimation.view.DetailStoryActivity
 
-class StoryAdapter: ListAdapter<ListStoryItem, StoryAdapter.StoryViewHolder>(DIFF_CALLBACK) {
-    inner class StoryViewHolder(private val binding: ItemStoryBinding): RecyclerView.ViewHolder(binding.root) {
+class StoryAdapter : ListAdapter<ListStoryItem, StoryAdapter.StoryViewHolder>(DIFF_CALLBACK) {
+    inner class StoryViewHolder(private val binding: ItemStoryBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(story: ListStoryItem) {
             with(binding) {
                 Glide.with(itemView.context)
                     .load(story.photoUrl)
-                    .into(ivItemStory)
+                    .into(ivItemPhoto)
+                tvItemName.text = story.name
+                tvItemDescription.text = story.description
+
+                itemView.setOnClickListener {
+                    val moveIntent =
+                        Intent(itemView.context, DetailStoryActivity::class.java).run {
+                            putExtra(DetailStoryActivity.EXTRA_STORY, getItem(position))
+                            setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        }
+
+                    val optionsCompat: ActivityOptionsCompat =
+                        ActivityOptionsCompat.makeSceneTransitionAnimation(
+                            itemView.context as Activity,
+                            Pair(ivItemPhoto, "profile"),
+                            Pair(tvItemName, "name"),
+                            Pair(tvItemDescription, "description"),
+                        )
+                    itemView.context.startActivity(moveIntent, optionsCompat.toBundle())
+                }
             }
         }
     }
@@ -35,14 +57,6 @@ class StoryAdapter: ListAdapter<ListStoryItem, StoryAdapter.StoryViewHolder>(DIF
         position: Int,
     ) {
         holder.bind(getItem(position))
-
-        holder.itemView.setOnClickListener {
-            val moveIntent =
-                Intent(holder.itemView.context, LoginActivity::class.java).run {
-                    setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                }
-            holder.itemView.context.startActivity(moveIntent)
-        }
     }
 
     companion object {

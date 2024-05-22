@@ -6,6 +6,17 @@
     android:layout_height="match_parent"
     tools:context=".view.login.LoginActivity">
 
+    <com.google.android.material.progressindicator.CircularProgressIndicator
+        android:id="@+id/cpi_login"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="0dp"

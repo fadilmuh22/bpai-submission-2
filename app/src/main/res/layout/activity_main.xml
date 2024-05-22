@@ -9,7 +9,7 @@
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/material_dynamic_primary90"
+        android:background="@color/material_dynamic_primary100"
         app:elevation="0dp">
 
         <androidx.appcompat.widget.Toolbar
@@ -17,18 +17,40 @@
             android:layout_width="match_parent"
             android:layout_height="?actionBarSize"
             android:textAlignment="center"
-            app:titleTextColor="@color/white"
             app:menu="@menu/main_menu"
-            app:title="@string/title_main"/>
+            app:title="@string/title_main"
+            app:titleTextColor="@color/black" />
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.core.widget.NestedScrollView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" >
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:paddingVertical="16dp"
+        android:paddingHorizontal="16dp">
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_main_stories"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/item_story"/>
     </androidx.core.widget.NestedScrollView>
+
+    <ProgressBar
+        android:id="@+id/pb_main"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_main"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:src="@drawable/baseline_add_24"
+        android:layout_margin="16dp" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
