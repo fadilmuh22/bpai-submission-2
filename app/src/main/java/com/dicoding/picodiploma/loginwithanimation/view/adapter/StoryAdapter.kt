@@ -27,16 +27,15 @@ class StoryAdapter : ListAdapter<ListStoryItem, StoryAdapter.StoryViewHolder>(DI
                 itemView.setOnClickListener {
                     val moveIntent =
                         Intent(itemView.context, DetailStoryActivity::class.java).run {
-                            putExtra(DetailStoryActivity.EXTRA_STORY, getItem(position))
-                            setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                            putExtra(DetailStoryActivity.EXTRA_STORY, story)
                         }
 
                     val optionsCompat: ActivityOptionsCompat =
                         ActivityOptionsCompat.makeSceneTransitionAnimation(
                             itemView.context as Activity,
-                            Pair(ivItemPhoto, "profile"),
-                            Pair(tvItemName, "name"),
-                            Pair(tvItemDescription, "description"),
+                            Pair(ivItemPhoto, "detail_photo"),
+                            Pair(tvItemName, "detail_name"),
+                            Pair(tvItemDescription, "detail_description"),
                         )
                     itemView.context.startActivity(moveIntent, optionsCompat.toBundle())
                 }

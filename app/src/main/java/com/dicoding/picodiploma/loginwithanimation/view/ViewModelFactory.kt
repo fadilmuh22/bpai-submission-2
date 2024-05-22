@@ -56,5 +56,11 @@ class ViewModelFactory(
             }
             return instance as ViewModelFactory
         }
+
+        @JvmStatic
+        fun clearInstance() {
+            StoriesRepository.clearInstance()
+            instance = null
+        }
     }
 }

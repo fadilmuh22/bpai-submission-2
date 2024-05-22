@@ -9,7 +9,6 @@
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/material_dynamic_primary100"
         app:elevation="0dp">
 
         <androidx.appcompat.widget.Toolbar

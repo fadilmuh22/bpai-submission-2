@@ -78,6 +78,7 @@ class LoginActivity : AppCompatActivity() {
         token: String,
     ) {
         viewModel.saveSession(UserModel(email, token))
+        ViewModelFactory.clearInstance()
         AlertDialog.Builder(this).apply {
             setMessage("Anda berhasil login. Ayo sharing story anda!")
             setPositiveButton("Lanjut") { _, _ ->

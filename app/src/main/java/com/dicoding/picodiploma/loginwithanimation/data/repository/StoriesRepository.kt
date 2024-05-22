@@ -107,5 +107,10 @@ class StoriesRepository private constructor(
             instance ?: synchronized(this) {
                 instance ?: StoriesRepository(apiService)
             }.also { instance = it }
+
+        @JvmStatic
+        fun clearInstance() {
+            instance = null
+        }
     }
 }

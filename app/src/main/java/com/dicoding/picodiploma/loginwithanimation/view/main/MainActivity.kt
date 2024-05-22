@@ -69,7 +69,6 @@ class MainActivity : AppCompatActivity() {
             when (it) {
                 is ResultState.Error -> {
                     binding.rvMainStories.visibility = View.GONE
-                    Toast.makeText(this, it.error, Toast.LENGTH_SHORT).show()
                 }
                 ResultState.Loading -> {
                     binding.rvMainStories.visibility = View.GONE
