@@ -13,7 +13,16 @@
     <string name="name">Nama</string>
     <string name="message_main_page">Ayo sharing ilmu di Dicoding Story!.</string>
     <string name="greeting">Halo %1$s,</string>
+    <string name="story_maps">Story Maps</string>
     <string name="logout">Keluar</string>
     <string name="password_length_error">Password tidak boleh kurang dari 8 karakter</string>
     <string name="empty_image_warning">Silakan masukkan berkas gambar terlebih dahulu.</string>
+    <string name="title_activity_story_maps">StoryMapsActivity</string>
+    <string name="style_parsing_failed">Style parsing failed.</string>
+    <string name="can_t_find_style_error">"Can't find style. Error: "</string>
+    <string name="failed_to_start_camera">Failed to start camera.</string>
+    <string name="can_t_find_any_story_with_location">Can\'t find any story with location.</string>
+    <string name="retry">Retry</string>
+    <string name="login_success">Anda berhasil login. Ayo sharing story anda!</string>
+    <string name="continue_login">Lanjut</string>
 </resources>

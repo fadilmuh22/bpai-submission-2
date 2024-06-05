@@ -6,6 +6,7 @@ import com.dicoding.picodiploma.loginwithanimation.data.pref.dataStore
 import com.dicoding.picodiploma.loginwithanimation.data.remote.retrofit.ApiConfig
 import com.dicoding.picodiploma.loginwithanimation.data.repository.StoriesRepository
 import com.dicoding.picodiploma.loginwithanimation.data.repository.UserRepository
+import com.dicoding.picodiploma.loginwithanimation.data.room.StoriesDatabase
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 
@@ -18,7 +19,8 @@ object Injection {
     fun provideStoriesRepository(context: Context): StoriesRepository {
         val pref = UserPreference.getInstance(context.dataStore)
         val user = runBlocking { pref.getSession().first() }
+        val storyDatabase = StoriesDatabase.getDatabase(context)
         val apiService = ApiConfig.getApiService(user.token)
-        return StoriesRepository.getInstance(apiService)
+        return StoriesRepository.getInstance(storyDatabase, apiService)
     }
 }
