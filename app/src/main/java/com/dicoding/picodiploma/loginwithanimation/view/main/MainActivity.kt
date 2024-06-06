@@ -80,6 +80,7 @@ class MainActivity : AppCompatActivity() {
                         storyAdapter.retry()
                     },
             )
+
         viewModel.stories.observe(this) {
             storyAdapter.submitData(lifecycle, it)
         }

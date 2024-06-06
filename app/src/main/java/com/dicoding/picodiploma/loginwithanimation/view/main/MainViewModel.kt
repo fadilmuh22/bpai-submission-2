@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 
 class MainViewModel(
     private val userRepository: UserRepository,
-    private val storiesRepository: StoriesRepository,
+    storiesRepository: StoriesRepository,
 ) : ViewModel() {
     val stories: LiveData<PagingData<ListStoryItem>> =
         storiesRepository.getStoriesPaging().cachedIn(viewModelScope)
